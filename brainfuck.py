@@ -44,9 +44,13 @@ class Interpreter(object):
     def input_char(self):
         self.data[self.dp] = ord(sys.stdin.read(1))
 
+    def jump_to(self):
+        self.cp = self.jump[self.cp]
+
     def eval(self):
         while self.cp < len(self.text) - 1:
             char = self.text[self.cp]
+            current_value = self.data[self.dp]
             if char == '+':
                 self.increment()
             elif char == '-':
@@ -59,12 +63,10 @@ class Interpreter(object):
                 self.print_char()
             elif char == ',':
                 self.input_char()
-            elif char == '[':
-                if not self.data[self.dp]:
-                    self.cp = self.jump[self.cp]
-            elif char == ']':
-                if self.data[self.dp]:
-                    self.cp = self.jump[self.cp]
+            elif char == '[' and current_value == 0:
+                self.jump_to()
+            elif char == ']' and current_value != 0:
+                self.jump_to()
             self.cp += 1
 
 if __name__ == '__main__':
