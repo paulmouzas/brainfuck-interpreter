@@ -1,1 +1,4 @@
-Simple Brainfuck interpreter in python.
+# Simple Brainfuck interpreter in python.
+
+## Usage
+    python brainfuck.py filename
