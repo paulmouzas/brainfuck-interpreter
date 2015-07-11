@@ -1,4 +1,7 @@
-# Simple Brainfuck interpreter in python.
+Interpreters
+======================
 
-## Usage
-    python brainfuck.py filename
+These are some interpreters I'm working on. Currently, I have:
+
+  - a Brainfuck (what an unfortunate name) interpreter written in Python,
+  - and a Lisp style calculator written in Javascript.
