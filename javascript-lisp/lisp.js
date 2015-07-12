@@ -2,7 +2,7 @@
 
 function tokenize (chars) {
   // put white space between the brackets so we can easiy split them up
-  var chars = program.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ');
+  var chars = chars.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ');
   
   // split up into tokens. the filter method just removes the empty strings
   var tokens = chars.split(/[\s]+/).filter(function(el) {return el.length != 0});
@@ -64,12 +64,16 @@ function eval_(x, env) {
     }
 }
 
-
+function run(program) {
+    var tokens = tokenize(program);
+    var expr = readFromTokens(tokens);
+    return eval_(expr, env);
+}
 
 // var program = "(begin (define r 10) (* 3.1416 (* r r)))";
-var program = "(+ 3 (+ 5 5))"
-var tokens = tokenize(program)
-var expr = readFromTokens(tokens);
-
-var result = eval_(expr, env);
-console.log(result);
+// var program = "(+ 3 (+ 5 5))"
+// var tokens = tokenize(program)
+// var expr = readFromTokens(tokens);
+// 
+// var result = eval_(expr, env);
+// console.log(result);
