@@ -1,15 +1,36 @@
-function add(x, y) {
-  return x + y;
+// all the paramaters are going to be Arrays
+
+function add(args) {
+    var head = args[0];
+    if (args.length == 1) {
+        return head;
+    }
+    return head + add(args.slice(1, args.length));
 }
 
-function minus(x, y) {
-    return x - y;
+function minus(args) {
+    var ans = args[0];
+    var i = 1;
+    for (i; i<args.length; i++) {
+        ans -= args[i];
+    }
+    return ans;
 }
 
-function divide(x, y) {
-    return x / y;
+function divide(args) {
+    var ans = args[0];
+    var i = 1;
+    for (i; i<args.length; i++) {
+        ans /= args[i];
+    }
+    return ans;
 }
 
-function  mult(x, y) {
-    return x * y;
+function mult(args) {
+    var ans = args[0];
+    var i = 1;
+    for (i; i<args.length; i++) {
+        ans *= args[i];
+    }
+    return ans;
 }

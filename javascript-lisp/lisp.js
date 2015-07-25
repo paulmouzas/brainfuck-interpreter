@@ -37,22 +37,87 @@ function atom(token) {
     return token;
   }
 }
-  
 
-var env = {
+function pack(parms, args) {
+    var i;
+    var kv = {};
+    for (i=0; i<args.length; i++) {
+        kv[parms[i]] = args[i];
+    }
+    return kv;
+}
+
+// function Procedure(parms, body, env) {
+//     this.parms = parms;
+//     this.body = body;
+//     this.env = env;
+//     this.call = function(args) {
+//         var i;
+//         var kv = {};
+//         for (i=0; i<args.length; i++) {
+//             kv[this.parms[i]] = args[i];
+//         }
+//         console.log(args);
+//         return eval_(this.body, new Env(kv, this.env));
+//     }
+// }
+
+function Procedure(parms, body, env) {
+    parms = parms;
+    body = body;
+    env = env;
+    return function(args) {
+        var kv = pack(parms, args);
+        return eval_(body, new Env(kv, env));
+    }
+}
+
+  
+function Env(kv, outer) {
+  this.outer = outer;
+  for (var key in kv) {
+    this[key] = kv[key];
+  }
+}
+
+Env.prototype.find = function(key) {
+    console.log(key);
+    if (this[key]) {
+        return this;
+    } else {
+        return this.outer.find(key);
+    }
+}
+
+var global_env = new Env({
   '+': add,
   '-': minus,
   '/': divide,
   '*': mult,
-}
+});
+
+//var test_env = new Env({'foo': 'bar'}, global_env);
+//console.log(test_env.find('+')['+']);
+
 
 function eval_(x, env) {
     if (typeof x == 'string') {
-        return env[x];
+        return env.find(x)[x];
 
     } else if (x.constructor != Array) {
+        console.log(env);
+        console.log('in here');
         return x;
 
+    } else if (x[0] == 'define') {
+        var variable = x[1];
+        var exp = x[2];
+        env[variable] = eval_(exp, env);
+        console.log(env);
+    } else if (x[0] == 'lambda') {
+        var parms = x[1];
+        var body = x[2];
+        return new Procedure(parms, body, env);
     } else {
         var proc = eval_(x[0], env);
         var args = [];
@@ -60,14 +125,14 @@ function eval_(x, env) {
             var arg = eval_(x[i], env);
             args.push(arg);
         }
-        return proc(args[0], args[1]);
+        return proc(args);
     }
 }
 
 function run(program) {
     var tokens = tokenize(program);
     var expr = readFromTokens(tokens);
-    return eval_(expr, env);
+    return eval_(expr, global_env);
 }
 
 // var program = "(begin (define r 10) (* 3.1416 (* r r)))";
